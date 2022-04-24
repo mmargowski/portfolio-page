@@ -1,21 +1,21 @@
-import { gql } from "graphql-request"
+import { gql } from 'graphql-request'
 
 export const authorsQuery = gql`
-query GetAuthors {
-  authors {
-    name
-    intro
-    bio
-    slug
-    picture {
-      url
+  query GetAuthors {
+    authors {
+      name
+      intro
+      bio
+      slug
+      picture {
+        url
+      }
     }
   }
-}
 `
-export const projectsQuery = gql`
-query GetProjects {
-  projects {
+
+const PROJECT_FRAGMENT = gql`
+  fragment ProjectDetails on Project {
     name
     slug
     description
@@ -26,5 +26,22 @@ query GetProjects {
       url
     }
   }
-}
+`
+
+export const projectsQuery = gql`
+  ${PROJECT_FRAGMENT}
+  query GetProjects {
+    projects {
+      ...ProjectDetails
+    }
+  }
+`
+
+export const projectQuery = gql`
+  ${PROJECT_FRAGMENT}
+  query GetProject($slug: String!) {
+    project(where: { slug: $slug }) {
+      ...ProjectDetails
+    }
+  }
 `
